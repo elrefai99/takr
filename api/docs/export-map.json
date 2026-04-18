@@ -1,0 +1,40 @@
+{
+  "totalFiles": 3,
+  "totalExports": 3,
+  "totalImportEdges": 0,
+  "files": [
+    {
+      "file": "src/core/dotenv.ts",
+      "exports": [
+        {
+          "name": "default",
+          "kind": "default"
+        }
+      ],
+      "importedBy": [],
+      "importsFrom": []
+    },
+    {
+      "file": "src/gen-app-config.ts",
+      "exports": [
+        {
+          "name": "dotenv",
+          "kind": "value"
+        }
+      ],
+      "importedBy": [],
+      "importsFrom": []
+    },
+    {
+      "file": "src/gen-import.ts",
+      "exports": [
+        {
+          "name": "dotenv",
+          "kind": "value"
+        }
+      ],
+      "importedBy": [],
+      "importsFrom": []
+    }
+  ]
+}
