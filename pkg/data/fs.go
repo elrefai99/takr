@@ -3,13 +3,20 @@ package data
 import (
 	"log"
 	"os"
+	"path/filepath"
 )
 
 // create file when run project
 func CreateFile() {
-	_, err := os.ReadFile("../../data/data.json")
+	dir := filepath.Dir("json/data.json")
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	_, err := os.ReadFile("json/data.json")
 	if err != nil {
-		err = os.WriteFile("../../data/data.json", []byte("{}"), 0644)
+		err = os.WriteFile("json/data.json", []byte("{}"), 0644)
 		if err != nil {
 			log.Fatal(err)
 			return
