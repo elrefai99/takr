@@ -3,80 +3,46 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 
 	"github.com/elrefai99/takr/cmd"
-	"github.com/elrefai99/takr/pkg/data"
 )
 
 func main() {
+	cmd.Create_default()
 
 	flag.Parse()
 
 	args := flag.Args()
 
-	if len(args) == 0 {
-		data.CreateFile()
-		return
-	}
-
-	// folders
 	switch args[0] {
-	case "login":
-		fmt.Println("login flow")
 	case "create":
-		fmt.Println("create flow >")
-
-		// create project ...
-		fmt.Println("Do you want to create a new project? (y/n)")
-		var choice string
-		fmt.Scanln(&choice)
-
 		var name string
-		if choice == "y" {
-			fmt.Println("Add project name:")
-			fmt.Scanln(&name)
-			path, err := cmd.TakrProject(name)
-			if err != nil {
-				fmt.Println("Error creating project:", err)
-				return
-			}
-			fmt.Println("Project created at:", path)
+		var title string
+		var status string
+		var description string
+
+		fmt.Println("Please input Name of Task ...>")
+		fmt.Scanln(&name)
+		fmt.Println("Please input title of Task ...>")
+		fmt.Scanln(&title)
+		fmt.Println("Please choose type of status (To-Do, In Progress, Done) ...>")
+		fmt.Scanln(&status)
+		fmt.Println("Please input description of Task ...>")
+		fmt.Scanln(&description)
+		p := cmd.PayloadCreate{
+			Name:        name,
+			Title:       title,
+			Status:      status,
+			Description: description,
 		}
 
-		// create database ...
-		fmt.Println("Do you want to create a new database? (y/n)")
-		var database string
-		fmt.Scanln(&database)
-		if database == "y" {
-			TarkCreate := cmd.Tasks{}
-			var title string
-			var description string
-			var status string
-			fmt.Println("Add task title:")
-			fmt.Scanln(&title)
-			fmt.Println("Add task description:")
-			fmt.Scanln(&description)
-			fmt.Println("Add task status (To Do, In Progress, Done):")
-			fmt.Scanln(&status)
-			err := TarkCreate.TarkCreate(cmd.Task{
-				Path:        name,
-				Title:       title,
-				Status:      status,
-				Description: description,
-				Type:        "Project",
-			})
-			if err != nil {
-				fmt.Println("Error creating task:", err)
-				return
-			}
-			fmt.Println("Database created at:")
+		err := p.Create_Project(p)
+		if err != nil {
+			log.Fatal(err)
+			return
 		}
-		// ...
-	case "update":
-		cmd.TarkReadFiles()
 
-	case "read":
-		cmd.TarkReadFiles()
 	default:
 		fmt.Println("unknown command:", args[0])
 	}
