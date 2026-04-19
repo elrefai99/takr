@@ -6,12 +6,12 @@ import (
 	"log"
 
 	"github.com/elrefai99/takr/cmd"
+	create_default "github.com/elrefai99/takr/internal/data"
 	"github.com/elrefai99/takr/utils"
 )
 
 func main() {
-	cmd.Create_default()
-
+	create_default.Create_default()
 	flag.Parse()
 
 	args := flag.Args()

@@ -7,6 +7,15 @@ import (
 	"time"
 )
 
+type Tasks struct {
+	ID          uint      `json:"id"`
+	Title       string    `json:"title"`
+	Status      string    `json:"status"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
 type PayloadCreate struct {
 	ID          uint      `json:"id"`
 	Title       string    `json:"title"`
