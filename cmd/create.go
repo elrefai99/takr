@@ -17,47 +17,47 @@ type Tasks struct {
 }
 
 type PayloadCreate struct {
-	ID          uint      `json:"id"`
-	Title       string    `json:"title"`
-	Status      string    `json:"status"`
-	Description string    `json:"description"`
-	Name        string    `json:"name"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
+	Title       string
+	Status      string
+	Description string
 }
 
 func (p *PayloadCreate) Create_Project(payload PayloadCreate) error {
-	path := "json/" + payload.Name + ".json"
-	fmt.Println(path)
-	_, err := os.ReadFile(path)
-	if err == nil {
-		return err
-	}
-	if !os.IsNotExist(err) {
-		return err
-	}
+	path := "json/default.json"
 
-	arr := []Tasks{
-		{
-			ID:          1,
-			Title:       payload.Title,
-			Status:      payload.Status,
-			Description: payload.Description,
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
-		},
-	}
-
-	dataObject, err := json.MarshalIndent(arr, "", "  ")
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(path, dataObject, 0644)
+	var tasks []Tasks
+	if err = json.Unmarshal(data, &tasks); err != nil {
+		return err
+	}
+
+	var nextID uint = 1
+	if len(tasks) > 0 {
+		nextID = tasks[len(tasks)-1].ID + 1
+	}
+
+	tasks = append(tasks, Tasks{
+		ID:          nextID,
+		Title:       payload.Title,
+		Status:      payload.Status,
+		Description: payload.Description,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	})
+
+	dataObject, err := json.MarshalIndent(tasks, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Success create new task project:", payload.Name)
+	if err = os.WriteFile(path, dataObject, 0644); err != nil {
+		return err
+	}
+
+	fmt.Printf("Task created with ID: %d\n", nextID)
 	return nil
 }

@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func GetData(name string) ([]Tasks, error) {
-	path := "json/" + name + ".json"
+func GetData() ([]Tasks, error) {
+	path := "json/default.json"
 
 	taskData, err := os.ReadFile(path)
 	if err != nil {
