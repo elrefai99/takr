@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/elrefai99/takr/cmd"
+	"github.com/elrefai99/takr/utils"
 )
 
 func main() {
@@ -42,8 +43,20 @@ func main() {
 			log.Fatal(err)
 			return
 		}
-
+		return
+	case "get":
+		var name string
+		fmt.Println("Please input Name of Task ...>")
+		fmt.Scanln(&name)
+		data, err := cmd.GetData(name)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		utils.PrintResponse(data)
+		return
 	default:
 		fmt.Println("unknown command:", args[0])
+		return
 	}
 }
