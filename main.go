@@ -21,6 +21,42 @@ func readLine(prompt string) string {
 	return strings.TrimSpace(scanner.Text())
 }
 
+func create(title string, status string, description string) error {
+	p := cmd.PayloadCreate{
+		Title:       title,
+		Status:      status,
+		Description: description,
+	}
+
+	err := p.Create_Project(p)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func get() {
+	data, err := cmd.GetData()
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	utils.PrintResponse(data)
+}
+
+func update(title string, status string, description string, idInput uint) error {
+	err := cmd.UpdateTask(idInput, cmd.PayloadUpdate{
+		Title:       title,
+		Status:      status,
+		Description: description,
+	})
+	if err != nil {
+		return err
+	}
+	fmt.Println("Task updated successfully.")
+	return nil
+}
+
 func main() {
 	create_default.Create_default()
 	flag.Parse()
@@ -32,46 +68,38 @@ func main() {
 		title := readLine("Please input title of Task ...> ")
 		status := readLine("Please choose type of status (To-Do, In Progress, Done) ...> ")
 		description := readLine("Please input description of Task ...> ")
-
-		p := cmd.PayloadCreate{
-			Title:       title,
-			Status:      status,
-			Description: description,
-		}
-
-		err := p.Create_Project(p)
+		err := create(title, status, description)
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
 		return
 	case "get":
-		data, err := cmd.GetData()
-		if err != nil {
-			log.Fatal(err)
-			return
-		}
-		utils.PrintResponse(data)
+		get()
 		return
 	case "update":
 		var idInput uint
 		fmt.Print("Please input Task ID to update ...> ")
 		fmt.Scanln(&idInput)
-
-		title := readLine("New title (leave empty to skip) ...> ")
-		status := readLine("New status (leave empty to skip) ...> ")
-		description := readLine("New description (leave empty to skip) ...> ")
-
-		err := cmd.UpdateTask(idInput, cmd.PayloadUpdate{
-			Title:       title,
-			Status:      status,
-			Description: description,
-		})
+		title := readLine("Please input title of Task ...> ")
+		status := readLine("Please choose type of status (To-Do, In Progress, Done) ...> ")
+		description := readLine("Please input description of Task ...> ")
+		err := update(title, status, description, idInput)
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
-		fmt.Println("Task updated successfully.")
+		return
+
+	case "delete":
+		var id uint
+		fmt.Print("Please input Task ID to update ...> ")
+		fmt.Scanln(&id)
+		err := cmd.DeleteTask(uint(id))
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
 		return
 	default:
 		fmt.Println("unknown command:", args[0])
